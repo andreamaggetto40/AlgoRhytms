@@ -90,6 +90,7 @@ template<typename T>
 void vector<T>::v_delete(){
     if(data){
         for(size_t i = 0; i < size; ++i) data[i].~T();
+        delete[] data;
         size = capacity = 0;
     }
 };
