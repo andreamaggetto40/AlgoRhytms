@@ -9,6 +9,7 @@ class vector{
     size_t size, capacity;
 
     void clean_up();
+    void copy_from(const vector<T>& v);
 
     public:
         vector();

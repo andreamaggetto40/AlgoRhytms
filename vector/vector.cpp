@@ -49,15 +49,12 @@ void vector<T>::push_back(const T& el){
 template<typename T>
 vector<T>& vector<T>::operator=(const vector<T>& v){
     if(this != &v){
-        T* data_restore = new T[v.capacity];
-        for(size_t i = 0; i < v.size; ++i) data_restore[i] = v.data[i];
-
         clean_up();
 
-        data = data_restore;
+        data = new T[v.capacity];
+        copy_from(v);
         size = v.size;
         capacity = v.capacity;
-
     }
     return *this;
 };
@@ -130,6 +127,11 @@ void vector<T>::clean_up(){
     delete[] data;
     data = nullptr;
     size = capacity = 0;
+};
+
+template<typename T>
+void vector<T>::copy_from(const vector<T>& v){
+    for(size_t i = 0; i < v.size; ++i) data[i] = v.data[i];
 };
 
 
