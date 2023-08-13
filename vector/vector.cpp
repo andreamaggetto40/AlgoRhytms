@@ -4,7 +4,7 @@ template<typename T>
 vector<T>::vector() : size(0), capacity(10), data(new T[capacity]){};
 
 template<typename T>
-vector<T>::vector(const T& init, size_t init_size) : size(init_size), capacity(size * 2), data(new T[capacity]){
+vector<T>::vector(const T& init, size_t init_size) : size(init_size), capacity(init_size * 2), data(new T[init_size * 2]){
     for(size_t i = 0; i < init_size; ++i) data[i] = init;
 };
 
@@ -31,20 +31,16 @@ size_t vector<T>::get_size() const{
 
 template<typename T>
 void vector<T>::push_back(const T& el){
-    if(size >= capacity){
-        capacity *= 2;
-
-        T* data_restore = nullptr;
-        try{
-            data_restore = new T[capacity];
-        }
-        catch(const std::bad_alloc& ex){
-            throw std::runtime_error("Fail to locate dynamic memory");
-        }
+    if(size == capacity){
+        size_t new_capacity = (capacity == 0) ? 0 : capacity * 2;
         
+        T* data_restore = new T[new_capacity];
+
         for(size_t i = 0; i < size; ++i) data_restore[i] = std::move(data[i]);
-        delete data;
+
+        delete[] data;
         data = data_restore;
+        capacity = new_capacity;
     }
     data[size] = el;
     ++size;
@@ -81,9 +77,61 @@ vector<T>& vector<T>::operator=(vector<T>&& v) noexcept{
         capacity = v.capacity;
 
         v.data = nullptr;
-        size = capacity = 0;
+        v.size = v.capacity = 0;
     }
     return *this;
+};
+
+template<typename T>
+T& vector<T>::at(const size_t index) const{
+    if(index >= size) throw std::out_of_range("Out of range");
+    return data[index];
+};
+
+template<typename T>
+bool vector<T>::empty() const{
+    return size == 0;
+};
+
+template<typename T>
+T& vector<T>::back() const{
+    if(size == 0) throw std::out_of_range("Out of range!");
+    return data[size - 1];
+};
+
+template<typename T>
+T& vector<T>::front() const{
+    if(size == 0) throw std::out_of_range("Out of range!");
+    return data[0];
+}
+
+template<typename T>
+bool vector<T>::operator==(const vector<T>& v) const{
+    if(this != &v){
+        if(size != v.size) return false;
+        for(size_t i = 0; i < size; ++i){
+            if(data[i] != v.data[i]) return false;
+        }
+    }
+    return true;
+};
+
+template<typename T>
+bool vector<T>::operator!=(const vector<T>& v) const{
+    return !(*this == v);
+};
+
+template<typename T>
+void vector<T>::clear(){
+    v_delete();
+    capacity = 10;
+
+    try{
+        data = new T[capacity];
+    }
+    catch(const std::bad_alloc& ex){
+        throw std::runtime_error("Failed to allocate dynamic memory");
+    }
 };
 
 template<typename T>
@@ -94,6 +142,16 @@ void vector<T>::v_delete(){
         size = capacity = 0;
     }
 };
+
+template<typename T>
+void vector<T>::print() const{
+    for(size_t i = 0; i < size; ++i) std::cout << data[i] << " ";
+};
+
+int main(int argc, char const *argv[])
+{
+    
+}
 
 
 

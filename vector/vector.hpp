@@ -1,4 +1,6 @@
-#include <iostream>
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
+#include <ostream>
 
 template<typename T>
 class vector{
@@ -15,10 +17,21 @@ class vector{
         ~vector();  
 
         vector<T>& operator=(const vector<T>& v);
-        vector<T>& operator=(vector<T>&& v);
+        vector<T>& operator=(vector<T>&& v) noexcept;
+        
+        bool operator==(const vector<T>& v) const;
+        bool operator!=(const vector<T>& v) const;
 
         size_t get_size() const;
         void push_back(const T& el);
+        T& at(const size_t index) const;
+        bool empty() const;
+        T& back() const;
+        T& front() const;
+        void clear();
+        void print() const;
 };
+
+#endif
         
         
