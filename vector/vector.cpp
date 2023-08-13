@@ -104,6 +104,8 @@ void vector<T>::push_back(const T& el){
  *
  * @param v The vector to be copied.
  * @return Reference to the modified vector.
+ * 
+ * @note the time complexity of the function is O(n)
  */
 template<typename T>
 vector<T>& vector<T>::operator=(const vector<T>& v){
@@ -125,6 +127,8 @@ vector<T>& vector<T>::operator=(const vector<T>& v){
  *
  * @param v The vector to be moved.
  * @return Reference to the modified vector.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 vector<T>& vector<T>::operator=(vector<T>&& v) noexcept{
@@ -147,6 +151,8 @@ vector<T>& vector<T>::operator=(vector<T>&& v) noexcept{
  * @param index The index of the element to be accessed.
  * @return Reference to the element.
  * @throws std::out_of_range If the index is out of range.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 T& vector<T>::at(const size_t index) const{
@@ -158,6 +164,8 @@ T& vector<T>::at(const size_t index) const{
  * @brief Checks if the vector is empty.
  *
  * @return True if the vector is empty, otherwise false.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 bool vector<T>::empty() const{
@@ -169,6 +177,8 @@ bool vector<T>::empty() const{
  *
  * @return Reference to the last element.
  * @throws std::out_of_range If the vector is empty.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 T& vector<T>::back() const{
@@ -181,6 +191,8 @@ T& vector<T>::back() const{
  *
  * @return Reference to the first element.
  * @throws std::out_of_range If the vector is empty.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 T& vector<T>::front() const{
@@ -195,6 +207,8 @@ T& vector<T>::front() const{
  *
  * @param v The vector to be compared.
  * @return True if the vectors are equal, otherwise false.
+ * 
+ * @note the time complexity is O(n)
  */
 template<typename T>
 bool vector<T>::operator==(const vector<T>& v) const{
@@ -214,6 +228,8 @@ bool vector<T>::operator==(const vector<T>& v) const{
  *
  * @param v The vector to be compared.
  * @return True if the vectors are not equal, otherwise false.
+ * 
+ * @note the time complexity is O(n)
  */
 template<typename T>
 bool vector<T>::operator!=(const vector<T>& v) const{
@@ -224,6 +240,8 @@ bool vector<T>::operator!=(const vector<T>& v) const{
  * @brief Clears the contents of the vector.
  *
  * Deallocates memory used by the vector and sets its capacity to 10.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 void vector<T>::clear(){
@@ -322,6 +340,8 @@ class vector<T>::const_iterator{
  * @brief Creates an iterator pointing to the beginning of the vector.
  *
  * @return An iterator pointing to the first element.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 typename vector<T>::iterator vector<T>::begin(){    
@@ -332,6 +352,8 @@ typename vector<T>::iterator vector<T>::begin(){
  * @brief Creates an iterator pointing to the end of the vector.
  *
  * @return An iterator pointing to the element after the last one.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 typename vector<T>::iterator vector<T>::end(){
@@ -342,6 +364,8 @@ typename vector<T>::iterator vector<T>::end(){
  * @brief Creates a constant iterator pointing to the beginning of the vector.
  *
  * @return A constant iterator pointing to the first element.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 typename vector<T>::const_iterator vector<T>::begin() const{
@@ -352,6 +376,8 @@ typename vector<T>::const_iterator vector<T>::begin() const{
  * @brief Creates a constant iterator pointing to the end of the vector.
  *
  * @return A constant iterator pointing to the element after the last one.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 typename vector<T>::const_iterator vector<T>::end() const{
