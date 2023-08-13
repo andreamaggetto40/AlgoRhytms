@@ -115,7 +115,7 @@ void vector<T>::push_back(const T& el){
  * @param v The vector to be copied.
  * @return Reference to the modified vector.
  * 
- * @note the time complexity of the function is O(n)
+ * @note the time complexity of the function is O(v.size)
  */
 template<typename T>
 vector<T>& vector<T>::operator=(const vector<T>& v){
@@ -218,7 +218,7 @@ T& vector<T>::front() const{
  * @param v The vector to be compared.
  * @return True if the vectors are equal, otherwise false.
  * 
- * @note the time complexity is O(n)
+ * @note the time complexity is O(v.size)
  */
 template<typename T>
 bool vector<T>::operator==(const vector<T>& v) const{
@@ -239,7 +239,7 @@ bool vector<T>::operator==(const vector<T>& v) const{
  * @param v The vector to be compared.
  * @return True if the vectors are not equal, otherwise false.
  * 
- * @note the time complexity is O(n)
+ * @note the time complexity is O(v.size)
  */
 template<typename T>
 bool vector<T>::operator!=(const vector<T>& v) const{
