@@ -8,6 +8,8 @@
 /**
  * @brief Default constructor for the vector class.
  * Initializes an empty vector with a default capacity of 10.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 vector<T>::vector() : size(0), capacity(10), data(new T[capacity]){};
@@ -17,6 +19,8 @@ vector<T>::vector() : size(0), capacity(10), data(new T[capacity]){};
  * 
  * @param init The initial value for all elements.
  * @param init_size The size of the vector to be created.
+ * 
+ * @note the time complexity is O(init_size)
  */
 template<typename T>
 vector<T>::vector(const T& init, size_t init_size) : size(init_size), capacity(init_size * 2), data(new T[init_size * 2]){
@@ -29,6 +33,8 @@ vector<T>::vector(const T& init, size_t init_size) : size(init_size), capacity(i
  * Creates a new vector by copying the contents of another vector.
  *
  * @param v The vector to be copied.
+ * 
+ * @note the time complexity is O(v.size)
  */
 template<typename T>
 vector<T>::vector(const vector<T>& v) : size(v.size), capacity(v.capacity), data(new T[capacity]){
@@ -42,6 +48,8 @@ vector<T>::vector(const vector<T>& v) : size(v.size), capacity(v.capacity), data
  * will be left in a valid but unspecified state.
  *
  * @param v The vector to be moved.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 vector<T>::vector(vector<T>&& v) : size(v.size), capacity(v.capacity), data(v.data){
@@ -53,6 +61,8 @@ vector<T>::vector(vector<T>&& v) : size(v.size), capacity(v.capacity), data(v.da
  * @brief Destructor.
  *
  * Deallocates the memory used by the vector and sets its size and capacity to zero.
+ * 
+ * @note the time complexity is O(1)
  */
 template<typename T>
 vector<T>::~vector(){
