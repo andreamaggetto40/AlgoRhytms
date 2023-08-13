@@ -1,5 +1,11 @@
 #include "vector.hpp"
 
+/*
+    @file vector.cpp
+    @brief The current cpp source file contains the actual implementation of the vector class methods
+    
+*/
+
 template<typename T>
 vector<T>::vector() : size(0), capacity(10), data(new T[capacity]){};
 

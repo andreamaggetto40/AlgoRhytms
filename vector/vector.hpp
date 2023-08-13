@@ -3,6 +3,15 @@
 #include <ostream>
 #include <stdexcept>
 
+/*
+    @file vector.hpp    
+    @brief templated vector class definition. vector is a class which aims to showcase how a dynamic C++ like vector is implemented from scratch.
+
+    @note in order to actually use the vector class, this file must be included.
+
+    @author Andrea Maggetto
+*/
+
 template<typename T>
 class vector{
     T* data;
