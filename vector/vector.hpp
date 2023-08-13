@@ -21,6 +21,9 @@ class vector{
     void copy_from(const vector<T>& v);
 
     public:
+        class iterator;
+        class const_iterator;
+
         vector();
         vector(const T& init, size_t init_size);
         vector(const vector<T>& v);
@@ -40,6 +43,10 @@ class vector{
         T& back() const;
         T& front() const;
         void clear();
+        iterator begin();
+        iterator end();
+        const_iterator begin() const;
+        const_iterator end() const;
 };
 
 #endif

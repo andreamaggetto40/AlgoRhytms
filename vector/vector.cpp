@@ -2,7 +2,7 @@
 
 /*
     @file vector.cpp
-    @brief The current cpp source file contains the actual implementation of the vector class methods
+    @brief The current cpp source file contains the actual implementation of the vector class methods   
     
 */
 
@@ -129,6 +129,100 @@ void vector<T>::clear(){
 };
 
 template<typename T>
+class vector<T>::iterator{
+    public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = T;
+        using pointer = T*;
+        using reference = T&;
+        using point_diff = ptrdiff_t;
+
+        iterator(pointer ptr) : current(ptr){};
+
+        bool operator=(iterator& other){
+            return current == other.current;
+        }
+        bool operator!=(iterator& other){
+            return !(current == other.current;)
+        }
+        iterator& operator++(){
+            ++current;
+            return *this;
+        }
+        iterator operator++(int){
+            iterator temp = *this;
+            ++current;
+            return temp;
+        }
+        reference operator*() const{
+            return *current;
+        }
+        pointer operator->() const{
+            return current;
+        }
+    private:
+        pointer current;
+};
+
+template<typename T>
+class vector<T>::const_iterator{
+    public:
+        using iterator_type = std::forward_iterator_tag;
+        using value_type = const T;
+        using pointer = const T*;
+        using reference = const T&;
+        using point_diff = ptrdiff_t;
+
+        const_iterator(pointer ptr) : current(ptr){};
+
+        bool operator==(const const_iterator& other) const{
+            return current == other.current;
+        }
+        bool operator!=(const const_iterator& other) const{
+            return !(current == other.current);
+        }
+
+        const_iterator& operator++(){
+            ++current;
+            return *this;
+        }
+        const_iterator operator++(int){
+            const_iterator temp = *this;
+            ++current;
+            return temp;
+        }
+        reference operator*() const{
+            return *current;
+        }
+        pointer operator->() const{
+            return current;
+        }
+
+    private:
+        pointer current;
+};
+
+template<typename T>
+typename vector<T>::iterator vector<T>::begin(){    
+    return iterator(data);
+};
+
+template<typename T>
+typename vector<T>::iterator vector<T>::end(){
+    return iterator(data + size);
+}
+
+template<typename T>
+typename vector<T>::const_iterator vector<T>::begin() const{
+    return iterator(data);
+}
+
+template<typename T>
+typename vector<T>::const_iterator vector<T>::end() const{
+    return iterator(data + size);
+}
+
+template<typename T>
 void vector<T>::clean_up(){
     delete[] data;
     data = nullptr;
@@ -139,6 +233,7 @@ template<typename T>
 void vector<T>::copy_from(const vector<T>& v){
     for(size_t i = 0; i < v.size; ++i) data[i] = v.data[i];
 };
+
 
 
 
