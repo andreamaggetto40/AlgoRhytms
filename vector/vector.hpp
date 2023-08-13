@@ -1,13 +1,14 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 #include <ostream>
+#include <stdexcept>
 
 template<typename T>
 class vector{
     T* data;
     size_t size, capacity;
 
-    void v_delete();
+    void clean_up();
 
     public:
         vector();
@@ -29,7 +30,6 @@ class vector{
         T& back() const;
         T& front() const;
         void clear();
-        void print() const;
 };
 
 #endif

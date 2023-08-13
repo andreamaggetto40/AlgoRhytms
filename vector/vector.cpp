@@ -21,7 +21,7 @@ vector<T>::vector(vector<T>&& v) : size(v.size), capacity(v.capacity), data(v.da
 
 template<typename T>
 vector<T>::~vector(){
-    v_delete();
+    clean_up();
 };
 
 template<typename T>
@@ -49,20 +49,15 @@ void vector<T>::push_back(const T& el){
 template<typename T>
 vector<T>& vector<T>::operator=(const vector<T>& v){
     if(this != &v){
-        T* new_data = nullptr;
+        T* data_restore = new T[v.capacity];
+        for(size_t i = 0; i < v.size; ++i) data_restore[i] = v.data[i];
 
-        try{
-            new_data = new T[v.capacity];
-            for(size_t i = 0; i < v.size; ++i) new_data[i] = v.data[i];
-        }
-        catch(const std::bad_alloc ex){
-            delete[] new_data;
-            throw;
-        }
-        v_delete();
-        data = new_data;
+        clean_up();
+
+        data = data_restore;
         size = v.size;
         capacity = v.capacity;
+
     }
     return *this;
 };
@@ -70,7 +65,7 @@ vector<T>& vector<T>::operator=(const vector<T>& v){
 template<typename T>
 vector<T>& vector<T>::operator=(vector<T>&& v) noexcept{
     if(this != &v){
-        v_delete();
+        clean_up();
 
         data = v.data;
         size = v.size;
@@ -123,37 +118,19 @@ bool vector<T>::operator!=(const vector<T>& v) const{
 
 template<typename T>
 void vector<T>::clear(){
-    v_delete();
+    clean_up();
+
     capacity = 10;
 
-    try{
-        data = new T[capacity];
-    }
-    catch(const std::bad_alloc& ex){
-        throw std::runtime_error("Failed to allocate dynamic memory");
-    }
+    data = new T[capacity];
 };
 
 template<typename T>
-void vector<T>::v_delete(){
-    if(data){
-        for(size_t i = 0; i < size; ++i) data[i].~T();
-        delete[] data;
-        size = capacity = 0;
-    }
+void vector<T>::clean_up(){
+    delete[] data;
+    data = nullptr;
+    size = capacity = 0;
 };
-
-template<typename T>
-void vector<T>::print() const{
-    for(size_t i = 0; i < size; ++i) std::cout << data[i] << " ";
-};
-
-int main(int argc, char const *argv[])
-{
-    
-}
-
-
 
 
 
