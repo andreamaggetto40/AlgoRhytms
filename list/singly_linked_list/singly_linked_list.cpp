@@ -96,8 +96,15 @@ singly_linked_list<T>& singly_linked_list<T>::operator=(singly_linked_list<T>&& 
 };
 
 /**
- * @brief Appends a value at the end of the list.
+ * @brief Appends a value at the end of the list and returns a reference to the modified list.
+ * 
+ * This method appends the specified value to the end of the list. If the list is empty, the new
+ * element becomes both the head and the tail of the list. Otherwise, the new element is added
+ * after the current tail.
+ * 
  * @param value The value to append.
+ * @return A reference to the modified list using a Fluent API style.
+ * 
  * @complexity O(1)
  */
 template<typename T>
@@ -117,8 +124,16 @@ singly_linked_list<T> singly_linked_list<T>::push_back(const T& value){
 };
 
 /**
- * @brief Removes the last element from the list.
- * @complexity O(n), where n is the size of the list.
+ * @brief Adds a value at the beginning of the list and returns a reference to the modified list.
+ * 
+ * This method adds the specified value at the beginning of the list. If the list is empty, the new
+ * element becomes both the head and the tail of the list. Otherwise, the new element is added
+ * before the current head.
+ * 
+ * @param value The value to add.
+ * @return A reference to the modified list using a Fluent API style.
+ * 
+ * @complexity O(1)
  */
 template<typename T>
 void singly_linked_list<T>::pop_back(){
