@@ -39,9 +39,9 @@ class singly_linked_list{
         singly_linked_list& operator=(const singly_linked_list<T>& l) noexcept;
         singly_linked_list& operator=(singly_linked_list<T>&& l) noexcept;
 
-        void push_back(const T& value);
+        singly_linked_list<T> push_back(const T& value);
         void pop_back();
-        void push_front(const T& value);
+        singly_linked_list<T> push_front(const T& value);
         void pop_front();
 
         const T& search(const T& value) const;

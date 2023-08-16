@@ -101,7 +101,7 @@ singly_linked_list<T>& singly_linked_list<T>::operator=(singly_linked_list<T>&& 
  * @complexity O(1)
  */
 template<typename T>
-void singly_linked_list<T>::push_back(const T& value){      
+singly_linked_list<T> singly_linked_list<T>::push_back(const T& value){      
     std::lock_guard<std::mutex> lock(l_mutex);
 
     node* to_add = new node(value);
@@ -112,6 +112,8 @@ void singly_linked_list<T>::push_back(const T& value){
         tail = tail->next;
     }
     ++size;
+
+    return *this;
 };
 
 /**
@@ -145,7 +147,7 @@ void singly_linked_list<T>::pop_back(){
  * @complexity O(1)
  */
 template<typename T>
-void singly_linked_list<T>::push_front(const T& value){
+singly_linked_list<T> singly_linked_list<T>::push_front(const T& value){
     std::lock_guard<std::mutex> lock(l_mutex);
 
     node* to_add = new node(value);
@@ -156,6 +158,8 @@ void singly_linked_list<T>::push_front(const T& value){
         head = to_add;
     }
     ++size;
+
+    return *this;
 };
 
 /**
