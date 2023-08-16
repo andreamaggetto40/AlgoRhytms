@@ -2,6 +2,18 @@
 #include <mutex>
 #include <atomic>
 
+/**
+ * @file singly_linked_list.hpp
+ * @brief A thread-safe singly linked list implementation.
+ * 
+ * This list provides basic operations like push_back, pop_back, push_front, and pop_front.
+ * It is designed to be thread-safe using mutexes.
+ * 
+ * @tparam T Type of the elements.
+ * 
+ * @author Andrea Maggetto
+ */
+
 template<typename T>
 class singly_linked_list{
     private:
@@ -36,6 +48,7 @@ class singly_linked_list{
         size_t get_size() const;
 
         class iterator;
+        class const_iterator;
 
         iterator begin();
         iterator end();
