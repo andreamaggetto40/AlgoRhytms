@@ -2,20 +2,24 @@
 #define VECTOR_HPP
 #include <ostream>
 #include <stdexcept>
+#include <mutex>
 
-/*
-    @file vector.hpp    
-    @brief templated vector class definition. vector is a class which aims to showcase how a dynamic C++ like vector is implemented from scratch.
-
-    @note in order to actually use the vector class, this file must be included.
-
-    @author Andrea Maggetto
-*/
+/**
+ * @file vector.hpp
+ * @brief Custom templated, multithreaded, and thread-safe vector class definition.
+ *
+ * This vector class is a handcrafted implementation designed to emulate the behavior and functionalities of the STL vector in C++. It provides dynamic array capabilities and is designed to be versatile across multiple data types. The implementation ensures thread safety through mutexes and lock guards, allowing for concurrent access and modifications without data races or inconsistencies.
+ *
+ * @note For utilizing the functionalities of this vector class, it's imperative to include this file.
+ * 
+ * @author Andrea Maggetto
+ */
 
 template<typename T>
 class vector{
     T* data;
     size_t size, capacity;
+    mutable std::mutex mtx_;
 
     void clean_up();
     void copy_from(const vector<T>& v);
@@ -32,6 +36,8 @@ class vector{
 
         vector<T>& operator=(const vector<T>& v);
         vector<T>& operator=(vector<T>&& v) noexcept;
+        const T& operator[](const size_t index) const;
+        T& operator[](const size_t index);
         
         bool operator==(const vector<T>& v) const;
         bool operator!=(const vector<T>& v) const;

@@ -37,8 +37,11 @@ vector<T>::vector(const T& init, size_t init_size) : size(init_size), capacity(i
  * @note the time complexity is O(v.size)
  */
 template<typename T>
-vector<T>::vector(const vector<T>& v) : size(v.size), capacity(v.capacity), data(new T[capacity]){
-    for(size_t i = 0; i < v.size; ++i) data[i] = v.data[i];
+vector<T>::vector(const vector<T>& v){
+    std::lock(mtx_,v.mtx_);
+    std::lock_guard<std::mutex> lock1(mtx_, std::adopt_lock);
+    std::lock_guard<std::mutex> lock2(v.mtx_, std::adopt_lock);
+    copy_from(v);
 };
 
 /**
@@ -52,7 +55,11 @@ vector<T>::vector(const vector<T>& v) : size(v.size), capacity(v.capacity), data
  * @note the time complexity is O(1)
  */
 template<typename T>
-vector<T>::vector(vector<T>&& v) : size(v.size), capacity(v.capacity), data(v.data){
+vector<T>::vector(vector<T>&& v){
+    std::unique_lock<std::mutex> lock(v.mtx_); //lock the source vector 
+    data = v.data;
+    size = v.size;
+    capacity = v.capacity;
     v.data = nullptr;
     v.size = v.capacity = 0;
 };
@@ -78,6 +85,7 @@ vector<T>::~vector(){
  */
 template<typename T>
 size_t vector<T>::get_size() const{
+    std::lock_guard<std::mutex> lock(mtx_);
     return size;
 };
 
@@ -92,8 +100,9 @@ size_t vector<T>::get_size() const{
  */
 template<typename T>
 void vector<T>::push_back(const T& el){
+    std::lock_guard<std::mutex> lock(mtx_);
     if(size == capacity){
-        size_t new_capacity = (capacity == 0) ? 0 : capacity * 2;
+        size_t new_capacity = (capacity == 0) ? 1 : capacity * 2;
         
         T* data_restore = new T[new_capacity];
 
@@ -120,12 +129,10 @@ void vector<T>::push_back(const T& el){
 template<typename T>
 vector<T>& vector<T>::operator=(const vector<T>& v){
     if(this != &v){
-        clean_up();
+        std::lock_guard<std::mutex> lock(v.mtx_);
 
-        data = new T[v.capacity];
+        clean_up();
         copy_from(v);
-        size = v.size;
-        capacity = v.capacity;
     }
     return *this;
 };
@@ -143,6 +150,8 @@ vector<T>& vector<T>::operator=(const vector<T>& v){
 template<typename T>
 vector<T>& vector<T>::operator=(vector<T>&& v) noexcept{
     if(this != &v){
+        std::lock_guard<std::mutex> lock(v.mtx_);
+
         clean_up();
 
         data = v.data;
@@ -166,6 +175,8 @@ vector<T>& vector<T>::operator=(vector<T>&& v) noexcept{
  */
 template<typename T>
 T& vector<T>::at(const size_t index) const{
+    std::lock_guard<std::mutex> lock(mtx_);
+
     if(index >= size) throw std::out_of_range("Out of range");
     return data[index];
 };
@@ -192,6 +203,7 @@ bool vector<T>::empty() const{
  */
 template<typename T>
 T& vector<T>::back() const{
+    std::lock_guard<std::mutex> lock(mtx_);
     if(size == 0) throw std::out_of_range("Out of range!");
     return data[size - 1];
 };
@@ -206,6 +218,7 @@ T& vector<T>::back() const{
  */
 template<typename T>
 T& vector<T>::front() const{
+    std::lock_guard<std::mutex> lock(mtx_);
     if(size == 0) throw std::out_of_range("Out of range!");
     return data[0];
 }
@@ -223,6 +236,7 @@ T& vector<T>::front() const{
 template<typename T>
 bool vector<T>::operator==(const vector<T>& v) const{
     if(this != &v){
+        std::lock_guard<std::mutex> lock(v.mtx_);
         if(size != v.size) return false;
         for(size_t i = 0; i < size; ++i){
             if(data[i] != v.data[i]) return false;
@@ -244,6 +258,38 @@ bool vector<T>::operator==(const vector<T>& v) const{
 template<typename T>
 bool vector<T>::operator!=(const vector<T>& v) const{
     return !(*this == v);
+};
+
+/**
+ * @brief Indexing operator to access or modify vector elements.
+ *
+ * Provides direct access to the specified element of the vector, without bounds checking.
+ *
+ * @param index The position of the element to access.
+ * @return Reference to the element at the specified position in the vector.
+ * 
+ * @note The time complexity is O(1).
+ */
+template<typename T>
+T& vector<T>::operator[](const size_t index){
+    std::lock_guard<std::mutex> lock(mtx_);
+    return data[index];
+};
+
+/**
+ * @brief Const indexing operator to access vector elements.
+ *
+ * Provides read-only direct access to the specified element of the vector, without bounds checking.
+ *
+ * @param index The position of the element to access.
+ * @return Const reference to the element at the specified position in the vector.
+ * 
+ * @note The time complexity is O(1).
+ */
+template<typename T>
+const T& vector<T>::operator[](const size_t index) const{
+    std::lock_guard<std::mutex> lock(mtx_);
+    return data[index];
 };
 
 /**
@@ -278,11 +324,11 @@ class vector<T>::iterator{
 
         iterator(pointer ptr) : current(ptr){};
 
-        bool operator==(iterator& other){
+        bool operator==(iterator& other) const{
             return current == other.current;
         }
-        bool operator!=(iterator& other){
-            return !(current == other.current;)
+        bool operator!=(iterator& other) const{
+            return !(current == other.current);
         }
         iterator& operator++(){
             ++current;
@@ -379,7 +425,7 @@ typename vector<T>::iterator vector<T>::end(){
  */
 template<typename T>
 typename vector<T>::const_iterator vector<T>::begin() const{
-    return iterator(data);
+    return const_iterator(data);
 }
 
 /**
@@ -391,7 +437,7 @@ typename vector<T>::const_iterator vector<T>::begin() const{
  */
 template<typename T>
 typename vector<T>::const_iterator vector<T>::end() const{
-    return iterator(data + size);
+    return const_iterator(data + size);
 }
 
 template<typename T>
@@ -403,8 +449,13 @@ void vector<T>::clean_up(){
 
 template<typename T>
 void vector<T>::copy_from(const vector<T>& v){
+    size = v.size;
+    capacity = v.capacity;
+    data = new T[capacity];
     for(size_t i = 0; i < v.size; ++i) data[i] = v.data[i];
 };
+
+
 
 
 
