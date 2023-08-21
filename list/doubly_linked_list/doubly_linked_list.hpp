@@ -16,7 +16,7 @@ class doubly_linked_list{
         };
 
         std::unique_ptr<node> head;
-        node* tail;
+        node* tail = nullptr;
         mutable std::mutex dll_mutex;
         std::atomic<size_t> size;
 
