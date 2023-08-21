@@ -43,6 +43,61 @@ doubly_linked_list<T>::doubly_linked_list(const doubly_linked_list<T>& dll){
 };
 
 template<typename T>
+doubly_linked_list<T>& doubly_linked_list<T>::operator=(const doubly_linked_list<T>& dll){
+    if(this != &dll){
+        head.reset();
+        tail = nullptr;
+        size = 0;
+
+        node* it = dll.head.get();
+        while(it != nullptr){
+            push_back(it->info);
+            it = it->next.get();
+        }
+    }
+    return *this;
+};
+
+template<typename T>
+doubly_linked_list<T>& doubly_linked_list<T>::operator=(doubly_linked_list<T>&& dll){
+    if(this != &dll){
+        head.reset();
+        tail = nullptr;
+        size = 0;
+
+        head = std::move(dll.head);s
+        tail = dll.tail;
+        size = dll.size;
+
+        dll.head = nullptr;
+        dll.tail = nullptr;
+        dll.size = 0;
+    }
+    return *this;
+};
+
+template<typename T>
+bool doubly_linked_list<T>::operator==(const doubly_linked_list<T>& dll) const{
+    if(size != dll.size) return false;
+
+    node* it = head.get();
+    node* it_dll = dll.head.get();
+
+    while(it != nullptr){
+        if(it->info != it_dll->info) return false;
+        it = it->next.get();
+        it_dll = it_dll->next.get();
+    }
+
+    return true;
+};  
+
+template<typename T>
+bool doubly_linked_list<T>::operator!=(const doubly_linked_list<T>& dll) const{
+    return !(*this == dll);
+};
+
+template<typename T>
 doubly_linked_list<T>& push_back(const T& el){       
     std::lock_guard<std::mutex> lock(dll_mutex);
 
