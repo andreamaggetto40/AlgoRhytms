@@ -21,6 +21,8 @@ class doubly_linked_list{
         std::atomic<size_t> size;
 
     public:
+        using value_type = T;
+
         doubly_linked_list();
         doubly_linked_list(const T& init, size_t init_size);
         doubly_linked_list(const doubly_linked_list<T>& dll);
@@ -53,5 +55,7 @@ class doubly_linked_list{
         const_reverse_iterator crbegin() const;
         const_reverse_iterator crend() const;
 };
+
+
 
 #endif

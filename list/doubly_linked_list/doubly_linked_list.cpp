@@ -65,7 +65,7 @@ doubly_linked_list<T>& doubly_linked_list<T>::operator=(doubly_linked_list<T>&& 
         tail = nullptr;
         size = 0;
 
-        head = std::move(dll.head);s
+        head = std::move(dll.head);
         tail = dll.tail;
         size = dll.size;
 
@@ -118,3 +118,163 @@ doubly_linked_list<T>& push_back(const T& el){
 
     return *this;
 };
+
+template<typename T>
+doubly_linked_list<T>& doubly_linked_list<T>::push_front(const T& el){
+    std::lock_guard<std::mutex> lock(dll_mutex);
+
+    std::unique_ptr<node> to_add = std::make_unique<node>();
+
+    to_add->info = el;
+    to_add->prev = nullptr;
+
+    if(!head){
+        head = std::move(to_add);
+        tail = head.get();
+    }
+    else{
+        to_add->next = std::move(head);
+        head = std::move(to_add);
+        to_add->next->prev = head.get();
+    }
+
+    return *this;
+};
+
+template<typename T>
+size_t doubly_linked_list<T>::get_size() const{
+    return size.load();
+};
+
+template<typename T>
+class doubly_linked_list<T>::iterator{  
+    private:
+        node* current;
+    public:
+        explicit iterator(node* init) : current(init){};
+
+        T& operator*(){return current->info;}
+        T* operator->(){return &current->info;}
+        iterator& operator++(){
+            current = current->next.get();
+            return *this;
+        }
+        iterator& operator++(int){
+            iterator tmp(*this);
+            current = current->next.get();
+            return tmp;
+        }
+        bool operator==(const iterator& it){return current == it.current;}
+        bool operator!=(const iterator& it){return current != it.current;}
+};
+
+template<typename T>
+typename doubly_linked_list<T>::iterator doubly_linked_list<T>::begin(){    
+    return iterator(head.get());
+};
+
+template<typename T>
+typename doubly_linked_list<T>::iterator doubly_linked_list<T>::end(){
+    return iterator(nullptr);
+};
+
+template<typename T>
+class doubly_linked_list<T>::const_iterator{
+    private:
+        const node* current;
+    public:
+        explicit const_iterator(const node* init) : current(init){};
+
+        const T& operator*() const {return current->info;}
+        const T* operator->() const{return &current->info;}
+        const_iterator& operator++(){
+            current = current->next.get();
+            return *this;
+        }
+        const_iterator operator++(int){
+            const_iterator tmp(*this);
+            current = current->next.get();
+            return tmp;
+        }
+        bool operator==(const const_iterator& it) const{
+            return current == it.current;
+        }
+        bool operator!=(const const_iterator& it) const{
+            return current != it.current;
+        }
+};
+
+template<typename T>
+typename doubly_linked_list<T>::const_iterator doubly_linked_list<T>::begin() const{
+    return const_iterator(head.get());
+};
+
+template<typename T>
+typename doubly_linked_list<T>::const_iterator doubly_linked_list<T>::end() const{
+    return const_iterator(nullptr);
+};
+
+template<typename T>
+class doubly_linked_list<T>::reverse_iterator{
+    private:
+        node* current;
+    public:
+        reverse_iterator(node* init) : current(init){};
+
+        T& operator*(){return current->info;}
+        T* operator->(){return &current->info;}
+        reverse_iterator& operator++(){
+            current = current->prev;
+            return *this;
+        }
+        reverse_iterator operator++(int){
+            reverse_iterator tmp(*this);
+            current = current->prev;
+            return tmp;
+        }
+        bool operator==(const reverse_iterator& it){return current == it.current;}
+        bool operator!=(const reverse_iterator& it){return current != it.current;}
+};
+
+template<typename T>
+typename doubly_linked_list<T>::reverse_iterator doubly_linked_list<T>::rbegin(){
+    return reverse_iterator(tail);
+};
+
+template<typename T>
+typename doubly_linked_list<T>::reverse_iterator doubly_linked_list<T>::rend(){
+    return reverse_iterator(nullptr);
+};
+
+template<typename T>
+class doubly_linked_list<T>::const_reverse_iterator{
+    private:
+        const node* current;
+    public:
+        const_reverse_iterator(const node* init) : current(init){};
+
+        const T& operator*() const {return current->info;}
+        const T* operator->() const{return &current->info;}
+        const_reverse_iterator& operator++(){
+            current = current->prev;
+            return *this;
+        }
+        const_reverse_iterator operator++(int){
+            const_reverse_iterator tmp(*this);
+            current = current->prev;
+            return tmp;
+        }
+        bool operator==(const const_reverse_iterator& it){return current == it.current;}
+        bool operator!=(const const_reverse_iterator& it){return current != it.current;}
+};
+
+template<typename T>
+typename doubly_linked_list<T>::const_reverse_iterator doubly_linked_list<T>::crbegin() const{
+    return const_reverse_iterator(tail);
+};
+
+template<typename T>
+typename doubly_linked_list<T>::const_reverse_iterator doubly_linked_list<T>::crend() const{
+    return const_reverse_iterator(nullptr);
+};
+
