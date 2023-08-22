@@ -278,3 +278,15 @@ typename doubly_linked_list<T>::const_reverse_iterator doubly_linked_list<T>::cr
     return const_reverse_iterator(nullptr);
 };
 
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const doubly_linked_list<T>& l){ 
+    os << "[";
+    for(auto it = l.begin(); it != l.end(); ++it) {
+        os << *it;
+        if (std::next(it) != l.end()) {  // Se non è l'ultimo elemento
+            os << ", ";
+        }
+    }
+    os << "]";
+    return os;
+};
